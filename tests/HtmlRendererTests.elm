@@ -218,4 +218,27 @@ Expecting attribute "first".
                                 }
                             ]
                         )
+        , test "html entity" <|
+            \() ->
+                """<link url="https://example.com?a=1&amp;b=2" />"""
+                    |> render
+                        (testRenderer
+                            [ Markdown.Html.tag "link"
+                                (\urlText children ->
+                                    Html
+                                        { tag = "link"
+                                        , urlText = urlText
+                                        }
+                                )
+                                |> Markdown.Html.withAttribute "url"
+                            ]
+                        )
+                    |> Expect.equal
+                        (Ok
+                            [ Html
+                                { tag = "link"
+                                , urlText = "https://example.com?a=1&b=2"
+                                }
+                            ]
+                        )
         ]
